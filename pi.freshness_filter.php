@@ -30,7 +30,7 @@ class Freshness_filter
         );
     }
 
-    public function filter(array $channels, int $age, string $unit)
+    public function filter(array $channels, int $age, string $unit): string // json
     {
         $query = ee()->db->select('channel_name')->from('exp_channels')
             ->where_in('channel_name', $channels)
