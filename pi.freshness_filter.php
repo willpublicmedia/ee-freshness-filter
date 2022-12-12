@@ -23,7 +23,8 @@ class Freshness_filter
         // assume we're filtering newer than 1 year
         $now = new DateTime('now');
         $cutoff = $now->modify('-1 year');
+        $channel_sql = ee()->functions->sql_andor_string($channels, 'channel_name');
 
-        return $cutoff->format('Y-m-d');
+        return $channel_sql;
     }
 }
