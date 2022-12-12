@@ -41,7 +41,6 @@ class Freshness_filter
             return $value['channel_name'];
         }, $results);
 
-        $fresh_string = implode('|', $fresh);
-        return $fresh_string;
+        return json_encode($fresh);
     }
 }
