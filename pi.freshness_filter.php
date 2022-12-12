@@ -31,15 +31,16 @@ class Freshness_filter
             ->group_by('exp_channel_titles.channel_id')
             ->having('count(exp_channel_titles.channel_id) >= 1');
 
-        $results = $query->get();
+        $results = $query->get()->result_array();
 
-        if ($results === null || $results->num_rows() === 0) {
-            $results->free_result();
+        if (empty($results)) {
             return ee()->TMPL->no_results();
         }
 
-        $result_array = $results->result_array();
-        $results->free_result();
-        return $result_array;
+        $fresh = array_map(function ($value) {
+            return $value['channel_name'];
+        }, $results);
+
+        return $fresh;
     }
 }
