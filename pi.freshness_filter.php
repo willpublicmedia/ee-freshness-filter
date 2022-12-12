@@ -23,10 +23,13 @@ class Freshness_filter
         // assume we're filtering newer than 1 year
         $now = new DateTime('now');
         $cutoff = $now->modify('-1 year');
-        $mod_channels = ee()->functions->sql_andor_string($channels, 'channel_name');
 
-        $query = ee()->db->select('channel_name')->from('channels');
-        $query->where_in('channel_name', explode('|', $channels));
+        $query = ee()->db->select('channel_name')->from('exp_channels')
+            ->where_in('channel_name', explode('|', $channels))
+            ->join('exp_channel_titles', 'exp_channels.channel_id = exp_channel_titles.channel_id', 'Titles')
+            ->where('exp_channel_titles.edit_date >= unix_timestamp(DATE_SUB(now(), interval 1 year))')
+            ->group_by('exp_channel_titles.channel_id')
+            ->having('count(exp_channel_titles.channel_id) >= 1');
 
         $results = $query->get();
 
