@@ -8,29 +8,34 @@ class Freshness_filter
 {
     public $return_data = '';
 
+    private $allowed_time_units = [
+        'year',
+        'month',
+        'day',
+    ];
+
     public function __construct()
     {
         $channels = explode('|', ee()->TMPL->fetch_param('channels'));
-        $interval = intval(ee()->TMPL->fetch_param('interval'), '1');
+        $age = intval(ee()->TMPL->fetch_param('age', 1));
+        $unit = ee()->TMPL->fetch_param('unit', 'year');
+        if (!in_array($unit, $this->allowed_time_units)) {
+            throw new Exception('Invalid time_unit. Allowed values are "year", "month", and "day".', 1);
+        }
 
         $this->return_data = $this->filter(
             $channels,
-            $interval
-            // ee()->TMPL->fetch_param('datestring'),
-            // ee()->TMPL->fetch_param('newer', true)
+            $age,
+            $unit
         );
     }
 
-    public function filter(array $channels, int $interval/*bool $newer */)
+    public function filter(array $channels, int $age, string $unit)
     {
-        // assume we're filtering newer than 1 year
-        $now = new DateTime('now');
-        $cutoff = $now->modify('-1 year');
-
         $query = ee()->db->select('channel_name')->from('exp_channels')
             ->where_in('channel_name', $channels)
             ->join('exp_channel_titles', 'exp_channels.channel_id = exp_channel_titles.channel_id', 'Titles')
-            ->where("exp_channel_titles.edit_date >= unix_timestamp(DATE_SUB(now(), interval $interval year))")
+            ->where("exp_channel_titles.edit_date >= unix_timestamp(DATE_SUB(now(), interval $age $unit))")
             ->group_by('exp_channel_titles.channel_id')
             ->having('count(exp_channel_titles.channel_id) >= 1');
 
