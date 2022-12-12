@@ -10,8 +10,9 @@ class Freshness_filter
 
     public function __construct()
     {
+        $channels = ee()->TMPL->fetch_param('channels');
         $this->return_data = $this->filter(
-            ee()->TMPL->fetch_param('channels')
+            $channels
             // ee()->TMPL->fetch_param('datestring'),
             // ee()->TMPL->fetch_param('newer', true)
         );
