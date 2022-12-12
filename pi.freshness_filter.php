@@ -23,8 +23,20 @@ class Freshness_filter
         // assume we're filtering newer than 1 year
         $now = new DateTime('now');
         $cutoff = $now->modify('-1 year');
-        $channel_sql = ee()->functions->sql_andor_string($channels, 'channel_name');
+        $mod_channels = ee()->functions->sql_andor_string($channels, 'channel_name');
 
-        return $channel_sql;
+        $query = ee()->db->select('channel_name')->from('channels');
+        $query->where_in('channel_name', explode('|', $channels));
+
+        $results = $query->get();
+
+        if ($results === null || $results->num_rows() === 0) {
+            $results->free_result();
+            return ee()->TMPL->no_results();
+        }
+
+        $result_array = $results->result_array();
+        $results->free_result();
+        return $result_array;
     }
 }
