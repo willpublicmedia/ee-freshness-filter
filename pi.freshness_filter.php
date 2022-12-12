@@ -11,14 +11,18 @@ class Freshness_filter
     public function __construct()
     {
         $this->return_data = $this->filter(
-            ee()->TMPL->fetch_param('channels'),
+            ee()->TMPL->fetch_param('channels')
             // ee()->TMPL->fetch_param('datestring'),
-            ee()->TMPL->fetch_param('newer', true)
+            // ee()->TMPL->fetch_param('newer', true)
         );
     }
 
-    public function filter(string $channels, /* string $datestring,*/bool $newer)
+    public function filter(string $channels/* string $datestring, bool $newer */)
     {
-        throw new \Exception('Not implemented');
+        // assume we're filtering newer than 1 year
+        $now = new DateTime('now');
+        $cutoff = $now->modify('-1 year');
+
+        return $cutoff->format('Y-m-d');
     }
 }
