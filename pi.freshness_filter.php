@@ -41,7 +41,8 @@ class Freshness_filter
             ->join('exp_channel_titles', 'exp_channels.channel_id = exp_channel_titles.channel_id', 'Titles')
             ->where("exp_channel_titles.edit_date >= unix_timestamp(DATE_SUB(now(), interval $age $unit))")
             ->group_by('exp_channel_titles.channel_id')
-            ->having('count(exp_channel_titles.channel_id) >= 1');
+            ->having('count(exp_channel_titles.channel_id) >= 1')
+            ->order_by('exp_channels.channel_title');
 
         $results = $query->get()->result_array();
 

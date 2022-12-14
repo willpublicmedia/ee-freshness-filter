@@ -29,3 +29,13 @@ In all cases, Freshness Filter returns a json-encoded array of channel names:
 1. Clone the repository as `freshness_filter`.
 2. Copy the repo contents to your user addons directory (e.g., `system/user/addons/freshness_filter/`).
 3. From the control panel, install Freshness Filter.
+
+## Changelog
+
+### 1.0.1
+
+- Order results by channel title.
+
+### 1.0.0
+
+- Initial release.
