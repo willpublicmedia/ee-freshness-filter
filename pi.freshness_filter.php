@@ -44,7 +44,7 @@ class Freshness_filter
         $query = ee()->db->select('channel_name')->from('exp_channels')
             ->where_in('channel_name', $channels)
             ->join('exp_channel_titles', 'exp_channels.channel_id = exp_channel_titles.channel_id', 'Titles')
-            ->where("exp_channel_titles.edit_date >= unix_timestamp(DATE_SUB(now(), interval $age $unit))")
+            ->where("exp_channel_titles.${date_field} >= unix_timestamp(DATE_SUB(now(), interval $age $unit))")
             ->group_by('exp_channel_titles.channel_id')
             ->having('count(exp_channel_titles.channel_id) >= 1')
             ->order_by('exp_channels.channel_title');
