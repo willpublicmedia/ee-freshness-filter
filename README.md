@@ -12,10 +12,11 @@ To check channels whose content has been updated within the last year, simply su
 {exp:freshness_filter channels="foo|bar|baz"}
 ```
 
-You may also supply a different cutoff age and/or unit of time. Allowed time units are "year", "month", and "day".
+You may supply a different cutoff age and/or unit of time. Allowed time units are "year", "month", and "day".
+You may also filter by entry date instead of the default edit date.
 
 ```handlebars
-{exp:freshness_filter channels="foo|bar|baz" age="2" unit="month"}
+{exp:freshness_filter channels="foo|bar|baz" age="2" unit="month" allow_edits="false"}
 ```
 
 In all cases, Freshness Filter returns a json-encoded array of channel names:
@@ -31,6 +32,10 @@ In all cases, Freshness Filter returns a json-encoded array of channel names:
 3. From the control panel, install Freshness Filter.
 
 ## Changelog
+
+### 1.1.0
+
+- Allow filtering by edit date (default) or entry date.
 
 ### 1.0.1
 
