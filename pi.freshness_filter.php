@@ -19,6 +19,8 @@ class Freshness_filter
         $channels = explode('|', ee()->TMPL->fetch_param('channels'));
         $age = intval(ee()->TMPL->fetch_param('age', 1));
         $unit = ee()->TMPL->fetch_param('unit', 'year');
+        $allow_edits = ee()->TMPL->fetch_param('allow_edits', 'true') == 'true' ? true : false;
+
         if (!in_array($unit, $this->allowed_time_units)) {
             throw new Exception('Invalid time_unit. Allowed values are "year", "month", and "day".', 1);
         }
@@ -26,15 +28,18 @@ class Freshness_filter
         $this->return_data = $this->filter(
             $channels,
             $age,
-            $unit
+            $unit,
+            $allow_edits
         );
     }
 
-    public function filter(array $channels, int $age, string $unit): string// json
+    public function filter(array $channels, int $age, string $unit, bool $allow_edits): string// json
+
     {
         $channels = ee()->db->escape_str($channels);
         $age = ee()->db->escape_str($age);
         $unit = ee()->db->escape_str($unit);
+        $date_field = $allow_edits ? 'edit_date' : 'entry_date';
 
         $query = ee()->db->select('channel_name')->from('exp_channels')
             ->where_in('channel_name', $channels)
